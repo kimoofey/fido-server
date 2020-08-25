@@ -2,7 +2,7 @@
  * Dependencies
  * @ignore
  */
-import {useState} from 'react'
+import React, {useState} from 'react'
 import {Alert, Button, Col, Container, Form, Row} from 'react-bootstrap'
 import Client from 'webauthn/client'
 
@@ -16,142 +16,92 @@ import Client from 'webauthn/client'
  * @ignore
  */
 function Login(props) {
-    const [name, setName] = useState('');
-    const [username, setUsername] = useState('');
-    const [error, setError] = useState('');
-    const [success, setSuccess] = useState('');
-    const [webauthn] = useState(new Client());
+  const [name, setName] = useState('');
+  const [username, setUsername] = useState('');
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
+  const [webauthn] = useState(new Client());
 
-    function onRegister() {
-        if (username === "") {
-            setError('Please enter a username');
-            return
-        }
-        webauthn.register({name, username}).then(response => {
-            console.log('Register response: ', response);
-            setSuccess('Registration successful. Try logging in.')
-        }).catch(error => {
-            setError(error.message)
-        })
+  function onRegister() {
+    if (username === "") {
+      setError('Please enter a username');
+      return
     }
+    webauthn.register({name, username}).then(response => {
+      console.log('Register response: ', response);
+      setSuccess('Registration successful. Try logging in.')
+    }).catch(error => {
+      setError(error.message)
+    })
+  }
 
-    function onLogin() {
-        if (username === "") {
-            setError('Please enter a username');
-            return
-        }
-        webauthn.login({username}).then(response => {
-            console.log('Login response: ', response);
-            if (response && response.status === "ok")
-                props.onLogin({
-                    username,
-                });
-        }).catch(error => setError(error.message))
+  function onLogin() {
+    if (username === "") {
+      setError('Please enter a username');
+      return
     }
+    webauthn.login({username}).then(response => {
+      console.log('Login response: ', response);
+      if (response && response.status === "ok")
+        props.onLogin({
+          username,
+        });
+    }).catch(error => setError(error.message))
+  }
 
-    return (
-        < Container >
-        < Row;
-    style = {;
-    {
-        80
-    }
-}>
-<
-    Col >
-    {error && < Alert;
-    variant = "danger";
-    dismissible;
-    onClose = {();
-=>
-    setError('')
-}>
-    {
-        error
-    }
-<
-    /Alert>};
-    {
-        success && < Alert;
-        variant = "success";
-        dismissible;
-        onClose = {();
-    =>
-        setSuccess('')
-    }>
-        {
-            success
-        }
-    <
-        /Alert>}
-        < /Col>
-        < /Row>
-        < Row >
-        < Col >
-        < h3 > Register < /h3>
-        < Form >
-        < Form.Group >
-        < Form.Label > Username < /Form.Label>
-        < Form.Control;
-        type = "text";
-        value = {username};
-        onChange = {e;
-    =>
-        setUsername(e.target.value)
-    }
-    ><
-        /Form.Control>
-        < /Form.Group>
-        < Form.Group >
-        < Form.Label > Name < /Form.Label>
-        < Form.Control;
-        type = "text";
-        value = {name};
-        onChange = {e;
-    =>
-        setName(e.target.value)
-    }
-    ><
-        /Form.Control>
-        < Form.Text;
-        className = "text-muted" > This;
-        name;
-        will;
-        be;
-        displayed;
-        publicly. < /Form.Text>
-        < /Form.Group>
-        < Button;
-        variant = "primary";
-        onClick = {onRegister} >
-            Register
-            < /Button>
-            < /Form>
-            < /Col>
-            < Col >
-            < h3 > Login < /h3>
-            < Form >
-            < Form.Group >
-            < Form.Label > Username < /Form.Label>
-            < Form.Control;
-        type = "text";
-        value = {username};
-        onChange = {e;
-    =>
-        setUsername(e.target.value)
-    }><
-        /Form.Control>
-        < /Form.Group>
-        < Button;
-        variant = "primary";
-        onClick = {onLogin} >
-            Login
-            < /Button>
-            < /Form>
-            < /Col>
-            < /Row>
-            < /Container>;
-    )
+  return (
+      <Container>
+        <Row style={{paddingTop: 80}}>
+          <Col>
+            {error && <Alert variant="danger" dismissible onClose={() => setError('')}>
+              {error}
+            </Alert>}
+            {success && <Alert variant="success" dismissible onClose={() => setSuccess('')}>
+              {success}
+            </Alert>}
+          </Col>
+        </Row>
+        <Row>
+          <Col>
+            <h3>Register</h3>
+            <Form>
+              <Form.Group>
+                <Form.Label>Username</Form.Label>
+                <Form.Control
+                    type="text"
+                    value={username}
+                    onChange={e => setUsername(e.target.value)}
+                ></Form.Control>
+              </Form.Group>
+              <Form.Group>
+                <Form.Label>Name</Form.Label>
+                <Form.Control
+                    type="text"
+                    value={name}
+                    onChange={e => setName(e.target.value)}
+                ></Form.Control>
+                <Form.Text className="text-muted">This name will be displayed publicly.</Form.Text>
+              </Form.Group>
+              <Button variant="primary" onClick={onRegister}>
+                Register
+              </Button>
+            </Form>
+          </Col>
+          <Col>
+            <h3>Login</h3>
+            <Form>
+              <Form.Group>
+                <Form.Label>Username</Form.Label>
+                <Form.Control type="text" value={username} onChange={e => setUsername(e.target.value)}></Form.Control>
+              </Form.Group>
+              <Button variant="primary" onClick={onLogin}>
+                Login
+              </Button>
+            </Form>
+          </Col>
+        </Row>
+      </Container>
+  )
 }
 
 /**
